@@ -1,1 +1,5 @@
 environment: "" # Set in ./environments/<environment>.yaml
+
+teams:
+  - name: team-a
+    friendlyName: Team A

@@ -1,0 +1,52 @@
+{{- range .Values.teams }}
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: {{ .name }}
+  namespace: argocd
+  labels:
+    idp.rottler.io/team: {{ .name }}
+spec:
+  description: Application project for workloads of the {{ .friendlyName }} team
+
+  sourceRepos:
+    - "https://gitlab.home.rottlr.de/idp/{{ .name }}/*"
+
+  # Scope all deployments to the team's namespaces
+  # Namespace provisioning is handled by the ApplicationEnvironment Crossplane XR,
+  # so ArgoCD does not need cluster-level namespace creation rights.
+  # ArgoCD is configured only with the local cluster, so no need to add restrictions there.
+  destinations:
+    - server: "*"
+      namespace: "{{ .name }}-*"
+
+  clusterResourceWhitelist: []
+
+  # Permit all namespace-scoped resource types. Kyverno ClusterPolicies provide
+  # the fine-grained guardrails; this project boundary enforces namespace scope.
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"
+
+  # Surface drift between ArgoCD-managed state and the live cluster.
+  # Helps catch resources left behind after a decommission or manual intervention.
+  orphanedResources:
+    warn: true
+
+  roles:
+    # Mapped to the team's GitLab group via OIDC group claims.
+    - name: developer
+      description: "Full application lifecycle access for {{ .name }} members"
+      policies:
+        - "p, proj:{{ .name }}:developer, applications, get,      {{ .name }}/*, allow"
+        - "p, proj:{{ .name }}:developer, applications, sync,     {{ .name }}/*, allow"
+        - "p, proj:{{ .name }}:developer, applications, action/*, {{ .name }}/*, allow"
+        - "p, proj:{{ .name }}:developer, logs,         get,      {{ .name }}/*, allow"
+        # exec matches the 'homelab/dev: Read + secrets + exec' access model.
+        # Restricting exec on the production cluster is handled in the global
+        # ArgoCD RBAC ConfigMap (deny exec where cluster=production), since
+        # AppProject roles cannot distinguish clusters within a wildcard destination.
+        - "p, proj:{{ .name }}:developer, exec,          create, {{ .name }}/*, allow"
+      groups:
+        - idp/{{ .name }}
+{{- end }}
