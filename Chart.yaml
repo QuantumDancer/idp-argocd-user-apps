@@ -1,0 +1,5 @@
+apiVersion: v2
+name: idp-argocd-user-apps
+description: Initial configuration for teams and application environments
+version: 0.1.0
+appVersion: "0.1.0"
