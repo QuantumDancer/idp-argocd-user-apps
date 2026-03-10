@@ -1,0 +1,12 @@
+apiVersion: idp.rottler.io/v1alpha1
+kind: ApplicationEnvironment
+metadata:
+  name: team-a-demo-payments-api
+  labels:
+    idp.rottler.io/team: team-a
+    idp.rottler.io/system: demo
+    idp.rottler.io/component: payments-api
+spec:
+  team: team-a
+  system: demo
+  component: payments-api
