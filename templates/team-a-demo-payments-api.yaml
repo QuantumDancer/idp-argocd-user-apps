@@ -2,6 +2,9 @@ apiVersion: idp.rottler.io/v1alpha1
 kind: ApplicationEnvironment
 metadata:
   name: team-a-demo-payments-api
+  annotations:
+    # Ensure ApplicationEnvironment is deleted before ArgoCD project
+    argocd.argoproj.io/sync-wave: "1"
   labels:
     idp.rottler.io/team: team-a
     idp.rottler.io/system: demo

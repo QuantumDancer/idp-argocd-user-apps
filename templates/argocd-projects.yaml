@@ -4,6 +4,9 @@ kind: AppProject
 metadata:
   name: {{ .name }}
   namespace: argocd
+  annotations:
+    # Ensure AppProjects are created before ApplicationEnvironments and deleted after them.
+    argocd.argoproj.io/sync-wave: "0"
   labels:
     idp.rottler.io/team: {{ .name }}
 spec:
