@@ -1,0 +1,11 @@
+apiVersion: idp.rottler.io/v1alpha1
+kind: TeamInfraEnvironment
+metadata:
+  name: team-a-infra
+  annotations:
+    # Ensure TeamInfraEnvironment is deleted before ArgoCD project
+    argocd.argoproj.io/sync-wave: "1"
+  labels:
+    idp.rottler.io/team: team-a
+spec:
+  team: team-a
