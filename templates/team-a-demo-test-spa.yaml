@@ -11,5 +11,6 @@ metadata:
     idp.rottler.io/component: test-spa
 spec:
   team: team-a
+  environment: {{ .Values.environment }}
   system: demo
   component: test-spa

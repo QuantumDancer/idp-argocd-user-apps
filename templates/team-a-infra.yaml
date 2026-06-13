@@ -9,3 +9,4 @@ metadata:
     idp.rottler.io/team: team-a
 spec:
   team: team-a
+  environment: {{ .Values.environment }}

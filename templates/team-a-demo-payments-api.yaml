@@ -11,5 +11,6 @@ metadata:
     idp.rottler.io/component: payments-api
 spec:
   team: team-a
+  environment: {{ .Values.environment }}
   system: demo
   component: payments-api
