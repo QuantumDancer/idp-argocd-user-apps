@@ -1,0 +1,26 @@
+apiVersion: idp.rottler.io/v1alpha1
+kind: ApplicationEnvironment
+metadata:
+  name: team-a-e2e-backstage-test-e2e-backstage-test-worker
+  annotations:
+    # Ensure ApplicationEnvironment is deleted before ArgoCD project
+    argocd.argoproj.io/sync-wave: "1"
+  labels:
+    idp.rottler.io/team: team-a
+    idp.rottler.io/system: e2e-backstage-test
+    idp.rottler.io/component: e2e-backstage-test-worker
+spec:
+  team: team-a
+  # Set per cluster by the idp-argocd-user-apps Helm chart (one of homelab,
+  # development, production). Single-brace Helm syntax passes through Backstage's
+  # scaffolder renderer untouched. The XRD requires this field.
+  environment: {{ .Values.environment }}
+  system: e2e-backstage-test
+  component: e2e-backstage-test-worker
+  {{- if "team-a-e2e-backstage-test-e2e-backstage-test-backend" }}
+  # Co-location (gap 2): skip creating a namespace and point the ArgoCD
+  # destination at the backend's existing namespace, so the worker shares the
+  # backend's RabbitMQ connection secret and KEDA TriggerAuthentication. Baked at
+  # scaffold time from the chosen backend component; absent for standalone workers.
+  targetNamespace: "team-a-e2e-backstage-test-e2e-backstage-test-backend"
+  {{- end }}
