@@ -1,0 +1,15 @@
+apiVersion: idp.rottler.io/v1alpha1
+kind: ApplicationEnvironment
+metadata:
+  name: team-a-e2e-backstage-test-e2e-backstage-test-backend
+  annotations:
+    # Ensure ApplicationEnvironment is deleted before ArgoCD project
+    argocd.argoproj.io/sync-wave: "1"
+  labels:
+    idp.rottler.io/team: team-a
+    idp.rottler.io/system: e2e-backstage-test
+    idp.rottler.io/component: e2e-backstage-test-backend
+spec:
+  team: team-a
+  system: e2e-backstage-test
+  component: e2e-backstage-test-backend
