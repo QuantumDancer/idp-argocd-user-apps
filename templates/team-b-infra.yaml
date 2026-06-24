@@ -1,0 +1,15 @@
+apiVersion: idp.rottler.io/v1alpha1
+kind: TeamInfraEnvironment
+metadata:
+  name: team-b-infra
+  annotations:
+    # Ensure TeamInfraEnvironment is deleted before ArgoCD project
+    argocd.argoproj.io/sync-wave: "1"
+  labels:
+    idp.rottler.io/team: team-b
+spec:
+  team: team-b
+  # Helm placeholder, resolved at deploy time by the idp-argocd-user-apps chart
+  # from environments/<environment>.yaml. Backstage's scaffolder leaves this
+  # untouched; only its own dollar-brace delimiter is interpolated.
+  environment: {{ .Values.environment }}
